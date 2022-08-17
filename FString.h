@@ -13,17 +13,17 @@ using std::endl;
 
 using CStr = const char*;
 
-inline constexpr size_t NultermIndexCStr(CStr str){ //like strlen
+inline constexpr size_t NultermIndexCStr(CStr str) noexcept{ //like strlen
     size_t len{0}; //can by charPtrIncrement
     for(;; ++len){ if(str[len] == '\0'){ break; } }
     return len;
 }
 
-template<typename InIt, typename OutIt> inline constexpr OutIt Copy(InIt begin, InIt end, OutIt destFirst){
+template<typename InIt, typename OutIt> inline constexpr OutIt Copy(InIt begin, InIt end, OutIt destFirst) noexcept{
     for(; begin != end; ++begin, ++destFirst){ *destFirst = *begin; }
     return destFirst; //while(begin != end){ *destFirst++ = *begin++; }
 }
-template<typename FwdIt, typename T> constexpr void Fill(FwdIt begin, FwdIt end, const T& value){
+template<typename FwdIt, typename T> constexpr void Fill(FwdIt begin, FwdIt end, const T& value) noexcept{
     for(; begin != end; ++begin){ (*begin) = value; }
 }
 
@@ -139,14 +139,14 @@ struct FString{
         return AddTo(static_cast<size_t>(val)).AddTo('.').AddTo(static_cast<size_t>(val * 10) % 10); //10 as one decimal point
     }
 
-    [[nodiscard]] constexpr FString AddNew(CharType val) noexcept{ return FString{*this}.AddTo(val); }
-    [[nodiscard]] constexpr FString AddNew(const FString& val) noexcept{ return FString{*this}.AddTo(val); }
-    template<size_t N> [[nodiscard]] constexpr FString AddNew(const CharType (&val)[N]) noexcept{ return FString{*this}.AddTo(val); }
-    template<typename Integer> [[nodiscard]] constexpr FString AddNew(Integer val) noexcept{ return FString{*this}.AddTo(val); }
-    [[nodiscard]] constexpr FString AddNew(float val) noexcept{ return FString{*this}.AddTo(val); } //one digit WITHOUT small adition
-    [[nodiscard]] constexpr FString AddNew(double val) noexcept{ return FString{*this}.AddTo(val); } //one digit WITHOUT small adition
+    [[nodiscard]] constexpr FString AddNew(CharType val) const noexcept{ return FString{*this}.AddTo(val); }
+    [[nodiscard]] constexpr FString AddNew(const FString& val) const noexcept{ return FString{*this}.AddTo(val); }
+    template<size_t N> [[nodiscard]] constexpr FString AddNew(const CharType (&val)[N]) const noexcept{ return FString{*this}.AddTo(val); }
+    template<typename Integer> [[nodiscard]] constexpr FString AddNew(Integer val) const noexcept{ return FString{*this}.AddTo(val); }
+    [[nodiscard]] constexpr FString AddNew(float val) const noexcept{ return FString{*this}.AddTo(val); } //one digit WITHOUT small adition
+    [[nodiscard]] constexpr FString AddNew(double val) const noexcept{ return FString{*this}.AddTo(val); } //one digit WITHOUT small adition
 
-    template<size_t N> [[nodiscard]] FString PreAddNew(const CharType (&val)[N]) noexcept{ //simple work non-atomic
+    template<size_t N> [[nodiscard]] FString PreAddNew(const CharType (&val)[N]) const noexcept{ //simple work non-atomic
         static_assert(N <= MaxSizeNulled, "Must be enough size with null-terminator"); //WITH nultemr by strarr-size
         return FString{val}.AddTo(*this);
     }
