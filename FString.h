@@ -1,4 +1,4 @@
-#pragma once //#ifndef TOOLS_H
+#pragma once
 
 #include <array>
 #include <iostream>
